@@ -16,7 +16,7 @@ import re
 from PIL import Image, ImageTk 
 import pygame
 from ultralytics import YOLO
-from arduino_connect import WritoToArduino
+from arduino_connect import WritoToArduino, findArduinoPort
 from test2 import Players, Settings, PlayerSettings,  Widget, WidgetFrame, Paths, Cleaner
 from MakeAnReport import create_report
 from math import ceil
@@ -300,7 +300,8 @@ def play_start_mp3(widget,layer):
     pygame.mixer.music.play() 
     arduino_led = True
     try:
-        ser = serial.Serial('COM4', baudrate=9600)
+        port = findArduinoPort()
+        ser = serial.Serial(port, baudrate=9600)
     except:
         arduino_led = False
     for i in range(1, 5):
@@ -342,7 +343,8 @@ def EndRace():
     play_finish_sound(False)
     play_mp3(True)
     try:
-        ser = serial.Serial('COM4', baudrate=9600)
+        port = findArduinoPort()
+        ser = serial.Serial(port, baudrate=9600)
         WritoToArduino(num='5', ser= ser)
         sleep(5)
         ser.close()
@@ -661,7 +663,8 @@ def Third_Layer():
                         if Players.CheckAllScore(maxLaps= maxLaps+1):
                             print("race ended")
                             try:
-                                ser = serial.Serial('COM4', baudrate=9600)
+                                port = findArduinoPort()
+                                ser = serial.Serial(port, baudrate=9600)
                                 WritoToArduino(num='3', ser= ser)
                                 ser.close()
                             except:
