@@ -329,15 +329,9 @@ class WidgetFrame:
     @property
     def Frame(self):
         return self._frame
-    @Frame.getter
-    def Frame(self):
-        return self._frame 
     @property
     def tag(self):
         return self._tag
-    @tag.getter
-    def tag(self):
-        return self._tag   
     @classmethod
     def GetFrameBytag(cls, desired_tag):
         for frame in cls.frames:
@@ -581,10 +575,7 @@ class Paths:
             if path.tag == tag: 
                 return path.path 
             
-class Cleaner(Players, Widget, WidgetFrame, Settings):
-    def __init__(self):
-        super().__init__()
-    
+class Cleaner():
     @classmethod
     def ResetEverything(cls):
         for obj in Widget.returnContainer():
@@ -593,4 +584,12 @@ class Cleaner(Players, Widget, WidgetFrame, Settings):
         PlayerSettings.RemoveAllObj()
         WidgetFrame.Clear_Frame_list()
         Players.ClearPlayer()
+        
+    @classmethod
+    def ResetRace(cls):
+        for obj in Widget.returnContainer():
+            del obj.widget_frame
+        Widget.ClearContainer()
+        WidgetFrame.Clear_Frame_list()
+    
         

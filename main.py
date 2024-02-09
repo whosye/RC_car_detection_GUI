@@ -331,9 +331,11 @@ def play_start_mp3(widget,layer):
 
 def Reset():
     global stopOneRace
-    #killRacingWidgets()
     stopOneRace = True
+    Widget.dismissWidgets()
+    Cleaner.ResetRace()
     Third_Layer()
+    
 def EndRace():
     global stopOneRace
     stopOneRace = True
@@ -415,11 +417,6 @@ def First_layer():
     profile_confirm.pack(padx=10, pady= 10)
     Go_to_settings.pack(padx=10, pady= 10)
 
-
-
-
-    
-
 def Second_Layer():
     global ThirdLayer 
     ThirdLayer = False
@@ -485,8 +482,6 @@ def Second_Layer():
     Race_Button.pack(padx=10, pady= 10)
     print("there should be no players from the start")
     PlayerSettings.ShowAllPlayers()
-    
-
     
 def Second_Layer_Settings():
     global ThirdLayer 
@@ -842,7 +837,7 @@ checkbox = tk.Checkbutton(master= layer24, text="internal", variable=var, comman
 ###  WIDGETS OF Countdown
 count_down_widget = tk.Entry(master=count_down_underline, font=my_font_count_down, width=5)
 End_race = tk.Button(master=count_down_underline, text="End_race", background='#4CAF50', foreground='#EAEAEA', font= my_font_widget, command=EndRace)
-Reset_race = tk.Button(master=count_down_underline, text="Reset_race ", background='#4CAF50', foreground='#EAEAEA', font= my_font_widget)
+Reset_race = tk.Button(master=count_down_underline, text="Reset_race ", background='#4CAF50', foreground='#EAEAEA', font= my_font_widget, command=Reset)
 Start_race = tk.Button(master=count_down_underline, text="Start_race", background='#4CAF50', foreground='#EAEAEA', font= my_font_widget, command= OneRaceStart)
 Race_info =  tk.Label(master=count_down_underline, text="info", background='#333333', foreground='#EAEAEA', font= my_font_label)
 
