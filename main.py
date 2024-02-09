@@ -302,6 +302,8 @@ def play_start_mp3(widget,layer):
     try:
         port = findArduinoPort()
         ser = serial.Serial(port, baudrate=9600)
+        if port is None:
+            arduino_led = False
     except:
         arduino_led = False
     for i in range(1, 5):
@@ -595,11 +597,7 @@ def Third_Layer():
                 _ , frame = cap.read()
                 result = model.predict(frame) 
                 if stopOneRace == True:
-                    print("Over")
-                    finish_thread  = True
                     event.set()
-    
-                    return
                 if StartOneRace == False:
                     pass
                 else:
@@ -677,26 +675,31 @@ def Third_Layer():
             
                    
         def OneFinishSound():
-            global finish_thread 
+
             path = os.path.join(os.path.abspath('Sound'),'win.mp3')
             data, samplerate = sf.read(path)
             while True:
-                event.wait()
-                if finish_thread:
+                if stopOneRace:
                     return
+                event.wait()
                 sd.play(data, samplerate)
-                #sd.wait() # Optional
                 event.clear()
 
-                
+
+
         event = threading.Event()                            
         race_thread = threading.Thread(target=OneRace, args=(newSettings.GetCamera(), newSettings.GetConfidence(), newSettings.GetLine(),  newSettings.GetLaps()))
         race_thread.start()
         
         OneFinishSoundThread = threading.Thread(target=OneFinishSound)
         OneFinishSoundThread.start()
+   
+def spree():
+    pass     
         
         
+def runFromJSON(inputJson):
+    pass
 
 
 ################################################################################################################################################################################
