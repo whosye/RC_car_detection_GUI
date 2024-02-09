@@ -1,0 +1,61 @@
+
+#title{
+    color: blue;
+    font-size: 18px;
+    background-color: lightgray;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#title2{
+    color: blue;
+    font-size: 18px;
+    background-color: lightgray;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#list{
+    color: blue;
+    font-size: 18px;
+    background-color: lightgray;
+}
+
+table {
+    font-size: 14px; /* Adjust the font size */
+    border-collapse: collapse; /* Combine table borders */
+    width: 100%; /* Make the table width 100% of the container */
+    table-layout: auto;
+    width: auto;
+}
+
+th, td {
+    border: 1px solid black; /* Add borders to table cells */
+    padding: 5px; /* Add padding to table cells for spacing */
+    text-align: left;
+}
+
+
+#first{
+    background-color: gold;
+}
+#second{
+    background-color: silver;
+}
+#third{
+    background-color: brown;
+}
+
+#modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    z-index: 2;
+  }
+  
