@@ -371,15 +371,10 @@ class Widget(PlayerSettings):
     @property
     def get_nick(self):
         return self._nick 
-    @get_nick.getter
-    def get_nick(self):
-        return self._nick     
+    
     @property
     def frame(self):
         return self._frame
-    @frame.getter
-    def frame(self):
-        return self._frame 
 
     @property
     def widget_frame(self):
@@ -388,10 +383,6 @@ class Widget(PlayerSettings):
     @widget_frame.setter
     def widget_frame(self, val):
             self._frame = val 
-
-    @widget_frame.getter
-    def widget_frame(self):
-        return self._frame
         
     @widget_frame.deleter
     def widget_frame(self):
@@ -406,9 +397,7 @@ class Widget(PlayerSettings):
     def widget_lapsCounter_text(self, val):
             self._lapsCounter_text = val 
 
-    @widget_lapsCounter_text.getter
-    def widget_lapsCounter_text(self):
-        return self._lapsCounter_text
+
         
     @widget_lapsCounter_text.deleter
     def widget_lapsCounter_text(self):
@@ -422,10 +411,6 @@ class Widget(PlayerSettings):
     def widget_position_text(self, val):
             self._position_text = val 
 
-    @widget_position_text.getter
-    def widget_position_text(self):
-        return self._position_text
-        
     @widget_position_text.deleter
     def widget_position_text(self):
         del self._position_text
@@ -436,11 +421,7 @@ class Widget(PlayerSettings):
     @widget_text.setter
     def widget_text(self, val):
             self._text = val 
-
-    @widget_text.getter
-    def widget_text(self):
-        return self._text
-        
+       
     @widget_text.deleter
     def widget_text(self):
         del self._text  
@@ -453,10 +434,6 @@ class Widget(PlayerSettings):
     def widget_label(self, val):
             self._label = val 
 
-    @widget_label.getter
-    def widget_label(self):
-        return self._label
-        
     @widget_label.deleter
     def widget_label(self):
         del self._label  
@@ -469,10 +446,6 @@ class Widget(PlayerSettings):
     def widget_tag(self, val):
             self._tag = val 
 
-    @widget_tag.getter
-    def widget_tag(self):
-        return self._tag
-        
     @widget_tag.deleter
     def widget_tag(self):
         del self._tag

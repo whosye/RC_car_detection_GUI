@@ -146,7 +146,7 @@ def Delete_player():
                 return
     except:
         pass
-    
+ 
 def Delete_tag():
     select = nick_storage_Entry.curselection()
     try:
@@ -327,15 +327,11 @@ def play_start_mp3(widget,layer):
     if arduino_led:
         ser.close()
         
+def on_closing():
+    window.destroy()
 
-
-def Reset():
-    global stopOneRace
-    stopOneRace = True
-    Widget.dismissWidgets()
-    Cleaner.ResetRace()
-    Third_Layer()
     
+
 def EndRace():
     global stopOneRace
     stopOneRace = True
@@ -417,10 +413,12 @@ def First_layer():
     profile_confirm.pack(padx=10, pady= 10)
     Go_to_settings.pack(padx=10, pady= 10)
 
-def Second_Layer():
+def Second_Layer(spreeMode=False):
     global ThirdLayer 
+    global g_spreeMode
+    g_spreeMode= spreeMode
     ThirdLayer = False
-    if newSettings.Get_MaxPlayers()==None:
+    if newSettings.Get_MaxPlayers() is None:
         if newSettings.Set_MaxPlayers(val=players_entry.get()):
             newSettings.Set_MaxPlayers(int(players_entry.get()))
         else:
@@ -509,6 +507,10 @@ def Third_Layer():
     global OnePlayerFinish
     global ThirdLayer 
     global firstLayer
+
+    global g_spreeMode
+    
+    
     firstLayer = False
     ThirdLayer = True
     OnePlayerFinish = False 
@@ -532,31 +534,36 @@ def Third_Layer():
     if start:
         layer2.place_forget()
         play_mp3(False)
-        for obj in PlayerSettings.ReturnList():    
-            for img in Img_widget_container:
-                if img.cget("text") == obj.Player_tag: 
-                    WidgetFrame(tag=obj.Player_tag, frame=tk.Frame(master=window, bg= '#333333', width=100, height=150, relief='raised', borderwidth=10))
-                    Widget(nick=obj.Player_nick, 
-                           PlayerTag = obj.Player_tag,
-                           frame=WidgetFrame.GetFrameBytag(obj.Player_tag), 
-                           widget_text=tk.Text(master= WidgetFrame.GetFrameBytag(obj.Player_tag), width=15, height=10, font=  my_font_Racing_text), 
-                           widget_label=tk.Label(master=WidgetFrame.GetFrameBytag(obj.Player_tag), text=obj.Player_nick, font=my_font_Racing_text, background='#40E0D0', foreground="black", width=15),
-                           widget_tag= tk.Label(master=WidgetFrame.GetFrameBytag(obj.Player_tag),image=img.image, font=my_font_text, background='#40E0D0', foreground="black"),
-                           lapsCounter_text= tk.Text(master= WidgetFrame.GetFrameBytag(obj.Player_tag),  width=15, height=1, font=  my_font_Racing_text),
-                           position_text= tk.Text(master= WidgetFrame.GetFrameBytag(obj.Player_tag), width=15, height=1, font=  my_font_Racing_text))
+        if g_spreeMode is False:
+            
+            for obj in PlayerSettings.ReturnList():    
+                for img in Img_widget_container:
+                    if img.cget("text") == obj.Player_tag: 
+                        WidgetFrame(tag=obj.Player_tag, frame=tk.Frame(master=window, bg= '#333333', width=100, height=150, relief='raised', borderwidth=10))
+                        Widget(nick=obj.Player_nick, 
+                            PlayerTag = obj.Player_tag,
+                            frame=WidgetFrame.GetFrameBytag(obj.Player_tag), 
+                            widget_text=tk.Text(master= WidgetFrame.GetFrameBytag(obj.Player_tag), width=15, height=10, font=  my_font_Racing_text), 
+                            widget_label=tk.Label(master=WidgetFrame.GetFrameBytag(obj.Player_tag), text=obj.Player_nick, font=my_font_Racing_text, background='#40E0D0', foreground="black", width=15),
+                            widget_tag= tk.Label(master=WidgetFrame.GetFrameBytag(obj.Player_tag),image=img.image, font=my_font_text, background='#40E0D0', foreground="black"),
+                            lapsCounter_text= tk.Text(master= WidgetFrame.GetFrameBytag(obj.Player_tag),  width=15, height=1, font=  my_font_Racing_text),
+                            position_text= tk.Text(master= WidgetFrame.GetFrameBytag(obj.Player_tag), width=15, height=1, font=  my_font_Racing_text))
                             
-        Widget.placeWidgets()
-        count_down.place(relx=0.35, rely = 0.8)
-        count_down_underline.pack()
-        count_down_widget.grid(row=0, column=0,padx=5)
-        End_race.grid(row=0, column=1,padx=5)
-        Reset_race.grid(row=0, column=2,padx=5)
-        Start_race.grid(row=0, column=3,padx=5)
-
+            Widget.placeWidgets()
+            count_down.place(relx=0.35, rely = 0.8)
+            count_down_underline.pack()
+            count_down_widget.grid(row=0, column=0,padx=5)
+            End_race.grid(row=0, column=1,padx=5)
+            Start_race.grid(row=0, column=2,padx=5)
+        else:
+            print("this is spreeMode")
+            return
         
+        
+       
         def OneRace(cameraSett, Yolo_confidence, finish_line, maxLaps): 
             global stopOneRace, StartOneRace, OnePlayerFinish
-            global finish_thread 
+            global finish_thread
             finish_thread  = False
             print("###############################################################################################################################")
             print(f"One race started with settings: camera {cameraSett}, confidence {Yolo_confidence}, finishLine {finish_line}, maxLaps {maxLaps}")
@@ -585,15 +592,18 @@ def Third_Layer():
             path_temp = os.path.abspath("Temp")
 
             while True:
-                if first_iter == False:
+                if first_iter is False:
                     deltaTime = time() - initTime
                     count_down_widget.delete(0,tk.END)
                     count_down_widget.insert(0, "{:.2f}".format(deltaTime))
                 _ , frame = cap.read()
                 result = model.predict(frame) 
-                if stopOneRace == True:
+                
+                if stopOneRace:
                     event.set()
-                if StartOneRace == False:
+                    return
+                    
+                if StartOneRace is False:
                     pass
                 else:
                     if first_iter == True:
@@ -665,10 +675,10 @@ def Third_Layer():
                             create_report(Players=Players.player_list, NumberOfLaps=maxLaps, race_id=race_id)
                             return
                             
-            
-     
-            
-                   
+             
+
+
+
         def OneFinishSound():
 
             path = os.path.join(os.path.abspath('Sound'),'win.mp3')
@@ -676,10 +686,10 @@ def Third_Layer():
             while True:
                 if stopOneRace:
                     return
+            
                 event.wait()
                 sd.play(data, samplerate)
                 event.clear()
-
 
 
         event = threading.Event()                            
@@ -690,7 +700,7 @@ def Third_Layer():
         OneFinishSoundThread.start()
    
 def spree():
-    pass     
+    Second_Layer(True);  
         
         
 def runFromJSON(inputJson):
@@ -706,6 +716,7 @@ def runFromJSON(inputJson):
 window = tk.Tk()
 window.geometry('1920x1080')
 window.title("CAR GUI")
+window.protocol("WM_DELETE_WINDOW", on_closing)
 newSettings = Settings()
 from fonts import my_font_label, my_font_widget, my_font_text, my_font_count_down, my_font_Racing_text
 global ThirdLayer 
@@ -759,7 +770,7 @@ back_to_first = tk.Button(master=layerSettings, text="back",command=First_layer,
 players_label  = tk.Label(master= layer1, text='Number of Players', background='#333333', foreground='#EAEAEA', font= my_font_label)
 players_entry  = tk.Entry(master=layer1, font=my_font_text)
 players_confirm_normal = tk.Button(master=layer1, text="OneRace",command=Second_Layer, background='#4CAF50', foreground='#EAEAEA', font= my_font_widget, relief='raised')
-players_confirm_special = tk.Button(master=layer1, text="Spree", background='#4CAF50', foreground='#EAEAEA', font= my_font_widget, relief='raised')
+players_confirm_special = tk.Button(master=layer1, text="Spree", background='#4CAF50', foreground='#EAEAEA', font= my_font_widget, relief='raised', command=spree)
 
 profile_label  = tk.Label(master= layer1, text='Player Profile', background='#333333', foreground='#EAEAEA', font= my_font_label)
 profile_entry  = tk.Listbox(master=layer1, width=20, height=1, font=my_font_text)
@@ -837,7 +848,6 @@ checkbox = tk.Checkbutton(master= layer24, text="internal", variable=var, comman
 ###  WIDGETS OF Countdown
 count_down_widget = tk.Entry(master=count_down_underline, font=my_font_count_down, width=5)
 End_race = tk.Button(master=count_down_underline, text="End_race", background='#4CAF50', foreground='#EAEAEA', font= my_font_widget, command=EndRace)
-Reset_race = tk.Button(master=count_down_underline, text="Reset_race ", background='#4CAF50', foreground='#EAEAEA', font= my_font_widget, command=Reset)
 Start_race = tk.Button(master=count_down_underline, text="Start_race", background='#4CAF50', foreground='#EAEAEA', font= my_font_widget, command= OneRaceStart)
 Race_info =  tk.Label(master=count_down_underline, text="info", background='#333333', foreground='#EAEAEA', font= my_font_label)
 
